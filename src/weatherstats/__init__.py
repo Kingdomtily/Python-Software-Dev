@@ -1,11 +1,17 @@
-from .data_loader import load_weather_data, load_and_combine_weather_data
-from .stats import descriptive_stats, value_counts_summary
+from .app import WeatherAnalysisApp
+from .data_sources import CombinedCsvDataSource, CsvFileDataSource, DataSource
+from .dataset import WeatherDataset
+from .processors import DescriptiveStatsProcessor, StatsProcessor, ValueCountsProcessor
 
 __all__ = [
-    "load_weather_data",
-    "load_and_combine_weather_data",
-    "descriptive_stats",
-    "value_counts_summary",
+    "WeatherAnalysisApp",
+    "DataSource",
+    "CsvFileDataSource",
+    "CombinedCsvDataSource",
+    "WeatherDataset",
+    "StatsProcessor",
+    "DescriptiveStatsProcessor",
+    "ValueCountsProcessor",
 ]
 
-__version__ = "0.1.0"
+__version__ = "0.2.0"
