@@ -1,19 +1,6 @@
-"""
-stats.py
---------
-
-Pure statistics logic. Everything here operates on a DataFrame that is
-already loaded (see :mod:`weatherstats.data_loader`) -- this module does
-not know or care where the data came from, which is the point of
-splitting it out as its own module.
-"""
-
 from __future__ import annotations
-
 from typing import Optional, Sequence
-
 import pandas as pd
-
 
 def descriptive_stats(
     df: pd.DataFrame,
@@ -33,8 +20,7 @@ def descriptive_stats(
     -------
     pandas.DataFrame
         One row per statistic (count, mean, median, mode, std, min,
-        max, range) and one column per numeric field, so it prints as a
-        clean table.
+        max, range) and one column per numeric field.
     """
     numeric_df = df.select_dtypes(include="number")
     if columns is not None:
@@ -42,12 +28,9 @@ def descriptive_stats(
         if missing:
             raise KeyError(f"Not numeric columns (or not found): {missing}")
         numeric_df = numeric_df[list(columns)]
-
     if numeric_df.empty:
         raise ValueError("No numeric columns available to summarize.")
-
     mode_row = numeric_df.mode().iloc[0]  # first mode if there are ties
-
     stats = {
         "count": numeric_df.count(),
         "mean": numeric_df.mean(),
@@ -59,7 +42,6 @@ def descriptive_stats(
         "range": numeric_df.max() - numeric_df.min(),
     }
     return pd.DataFrame(stats).T
-
 
 def value_counts_summary(df: pd.DataFrame, column: str, top_n: int = 5) -> pd.Series:
     """

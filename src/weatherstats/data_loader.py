@@ -1,24 +1,3 @@
-"""
-data_loader.py
----------------
-
-Responsible for exactly one thing: getting raw weather data from CSV
-file(s) on disk into a pandas DataFrame. Keeping this separate from the
-statistics logic (see :mod:`weatherstats.stats`) is part of the
-modularization goal for this assignment -- loading concerns and
-analysis concerns are decoupled, so either one can change or be reused
-independently.
-
-Kaggle publishes several variants of the "Rain in Australia" weather
-dataset. Some ship as a single ``weatherAUS.csv`` with a ``Date``
-column; others (e.g. the "Weather Dataset - Rattle Package" mirrors
-used in several intro-to-ML courses) ship as a pre-split
-``Weather Training Data.csv`` / ``Weather Test Data.csv`` pair, indexed
-by a ``row ID`` column instead of a date, with no ``RainTomorrow``
-column in the test half (it's the prediction target). This module
-handles both shapes without hardcoding either one's column list.
-"""
-
 from __future__ import annotations
 
 from pathlib import Path
@@ -26,11 +5,10 @@ from typing import Iterable, List, Optional, Sequence, Union
 
 import pandas as pd
 
-# Any of these column names, if present in a given CSV's header, will be
-# parsed as dates. Declared once so callers don't repeat string
-# literals. Not every dataset variant has one of these (e.g. datasets
-# indexed by "row ID" instead), so we only ever parse a name that is
-# actually present in that file's header -- never assume it blindly.
+# Column names that, if present in a given CSV's header, get parsed as
+# dates. Not every dataset has one of these (some are indexed by a
+# plain row id instead), so a name is only ever parsed if it's actually
+# present in that file's header -- never assumed.
 KNOWN_DATE_COLUMNS = ["Date", "date"]
 
 
@@ -45,12 +23,6 @@ def load_weather_data(
 ) -> pd.DataFrame:
     """
     Load a single weather-dataset CSV into a pandas DataFrame.
-
-    Works with any of the common Kaggle "Rain in Australia" variants:
-    a ``weatherAUS.csv`` with a ``Date`` column, or a
-    ``Weather Training/Test Data.csv`` file indexed by ``row ID``. Any
-    recognized date column that is actually present is parsed as a
-    real datetime; everything else is left as pandas infers it.
 
     Parameters
     ----------
@@ -72,7 +44,7 @@ def load_weather_data(
     csv_path = Path(csv_path)
     if not csv_path.exists():
         raise FileNotFoundError(
-            f"Could not find a weather dataset at '{csv_path}'.\n"
+            f"Could not find a weather dataset at '{csv_path}'. "
             "Download a weather dataset from Kaggle "
             "(https://www.kaggle.com/datasets) and place it at that "
             "path, or pass the correct path to load_weather_data()."
@@ -83,12 +55,11 @@ def load_weather_data(
     if usecols is not None:
         date_cols_present = [c for c in date_cols_present if c in usecols]
 
-    df = pd.read_csv(
+    return pd.read_csv(
         csv_path,
         usecols=usecols,
         parse_dates=date_cols_present if date_cols_present else None,
     )
-    return df
 
 
 def load_and_combine_weather_data(
@@ -98,13 +69,12 @@ def load_and_combine_weather_data(
     """
     Load and concatenate several weather CSVs into one DataFrame.
 
-    This is for dataset variants that ship pre-split across multiple
-    files (e.g. ``Weather Training Data.csv`` + ``Weather Test Data.csv``)
-    -- useful when a single split falls short of a minimum row-count
-    requirement but the files together clear it. Columns that exist in
-    some files but not others (for example a ``RainTomorrow`` target
-    column present only in a training split) are aligned automatically;
-    rows from files missing a column simply get ``NaN`` there.
+    Useful for datasets pre-split across multiple files (e.g. a
+    training file and a test file) where a single split may fall short
+    of a minimum row-count requirement but the files together clear it.
+    Columns present in some files but not others (for example a target
+    column only present in the training split) are aligned
+    automatically -- rows from a file missing that column get ``NaN``.
 
     Parameters
     ----------
@@ -112,21 +82,12 @@ def load_and_combine_weather_data(
         Paths to the CSV files to combine, in order.
     add_source_column : bool
         If True (default), add a ``source_file`` column recording which
-        input file each row came from -- useful since some pre-split
-        datasets reuse the same row-id values (e.g. "Row0") across
-        their train and test files.
+        input file each row came from.
 
     Returns
     -------
     pandas.DataFrame
         The concatenated data, with a fresh 0-based index.
-
-    Raises
-    ------
-    FileNotFoundError
-        If any path in ``csv_paths`` does not exist.
-    ValueError
-        If ``csv_paths`` is empty.
     """
     paths = [Path(p) for p in csv_paths]
     if not paths:
@@ -140,8 +101,7 @@ def load_and_combine_weather_data(
             frame["source_file"] = path.name
         frames.append(frame)
 
-    combined = pd.concat(frames, ignore_index=True, sort=False)
-    return combined
+    return pd.concat(frames, ignore_index=True, sort=False)
 
 
 def numeric_columns(df: pd.DataFrame) -> list[str]:

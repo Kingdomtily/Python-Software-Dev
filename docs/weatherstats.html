@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Python: package weatherstats</title>
+</head><body>
+
+<table class="heading">
+<tr class="heading-text decor">
+<td class="title"> <br><strong class="title">weatherstats</strong> (version 0.1.0)</td>
+<td class="extra"><a href=".">index</a><br><a href="file:/home/claude/weather-project/src/weatherstats/__init__.py">/home/claude/weather-project/src/weatherstats/__init__.py</a></td></tr></table>
+    <p><span class="code">weatherstats<br>
+============<br>
+ <br>
+A small, installable package for loading a Kaggle weather dataset with<br>
+pandas and computing descriptive statistics on it.<br>
+ <br>
+The point of this package is to demonstrate *modularization*: loading<br>
+logic and statistics logic each live in their own module and are<br>
+re-exported here, so a consumer can simply do::<br>
+ <br>
+    import weatherstats as ws<br>
+ <br>
+    df = ws.<a href="#-load_weather_data">load_weather_data</a>("data/weatherAUS.csv")<br>
+    stats_table = ws.<a href="#-descriptive_stats">descriptive_stats</a>(df)<br>
+    print(stats_table)<br>
+ <br>
+the same way you'd use any other installed third-party library (pandas,<br>
+numpy, etc.) after ``pip install -e .``.</span></p>
+<p>
+<table class="section">
+<tr class="decor pkg-content-decor heading-text">
+<td class="section-title" colspan=3> <br><strong class="bigsection">Package Contents</strong></td></tr>
+    
+<tr><td class="decor pkg-content-decor"><span class="code">      </span></td><td> </td>
+<td class="singlecolumn"><table><tr><td class="multicolumn"><a href="weatherstats.data_loader.html">data_loader</a><br>
+</td><td class="multicolumn"><a href="weatherstats.stats.html">stats</a><br>
+</td><td class="multicolumn"></td><td class="multicolumn"></td></tr></table></td></tr></table><p>
+<table class="section">
+<tr class="decor functions-decor heading-text">
+<td class="section-title" colspan=3> <br><strong class="bigsection">Functions</strong></td></tr>
+    
+<tr><td class="decor functions-decor"><span class="code">      </span></td><td> </td>
+<td class="singlecolumn"><dl><dt><a name="-descriptive_stats"><strong>descriptive_stats</strong></a>(df: 'pd.DataFrame', columns: 'Optional[Sequence[str]]' = None) -&gt; 'pd.DataFrame'</dt><dd><span class="code">Compute descriptive statistics for the numeric columns of ``df``.<br>
+ <br>
+Parameters<br>
+----------<br>
+df : pandas.DataFrame<br>
+columns : sequence of str, optional<br>
+    Restrict the computation to these columns. Defaults to every<br>
+    numeric column in ``df``.<br>
+ <br>
+Returns<br>
+-------<br>
+pandas.DataFrame<br>
+    One row per statistic (count, mean, median, mode, std, min,<br>
+    max, range) and one column per numeric field.</span></dd></dl>
+ <dl><dt><a name="-load_and_combine_weather_data"><strong>load_and_combine_weather_data</strong></a>(csv_paths: 'Iterable[Union[str, Path]]', add_source_column: 'bool' = True) -&gt; 'pd.DataFrame'</dt><dd><span class="code">Load and concatenate several weather CSVs into one DataFrame.<br>
+ <br>
+Useful for datasets pre-split across multiple files (e.g. a<br>
+training file and a test file) where a single split may fall short<br>
+of a minimum row-count requirement but the files together clear it.<br>
+Columns present in some files but not others (for example a target<br>
+column only present in the training split) are aligned<br>
+automatically -- rows from a file missing that column get ``NaN``.<br>
+ <br>
+Parameters<br>
+----------<br>
+csv_paths : iterable of str or pathlib.Path<br>
+    Paths to the CSV files to combine, in order.<br>
+add_source_column : bool<br>
+    If True (default), add a ``source_file`` column recording which<br>
+    input file each row came from.<br>
+ <br>
+Returns<br>
+-------<br>
+pandas.DataFrame<br>
+    The concatenated data, with a fresh 0-based index.</span></dd></dl>
+ <dl><dt><a name="-load_weather_data"><strong>load_weather_data</strong></a>(csv_path: 'Union[str, Path]', usecols: 'Optional[Sequence[str]]' = None) -&gt; 'pd.DataFrame'</dt><dd><span class="code">Load a single weather-dataset CSV into a pandas DataFrame.<br>
+ <br>
+Parameters<br>
+----------<br>
+csv_path : str or pathlib.Path<br>
+    Path to the weather CSV file.<br>
+usecols : sequence of str, optional<br>
+    If given, only load these columns (passed straight through to<br>
+    ``pandas.read_csv``).<br>
+ <br>
+Returns<br>
+-------<br>
+pandas.DataFrame<br>
+ <br>
+Raises<br>
+------<br>
+FileNotFoundError<br>
+    If ``csv_path`` does not exist.</span></dd></dl>
+ <dl><dt><a name="-value_counts_summary"><strong>value_counts_summary</strong></a>(df: 'pd.DataFrame', column: 'str', top_n: 'int' = 5) -&gt; 'pd.Series'</dt><dd><span class="code">Convenience helper for categorical columns (e.g. ``Location`` or<br>
+``RainToday``): the ``top_n`` most frequent values and their counts.</span></dd></dl>
+</td></tr></table><p>
+<table class="section">
+<tr class="decor data-decor heading-text">
+<td class="section-title" colspan=3> <br><strong class="bigsection">Data</strong></td></tr>
+    
+<tr><td class="decor data-decor"><span class="code">      </span></td><td> </td>
+<td class="singlecolumn"><strong>__all__</strong> = ['load_weather_data', 'load_and_combine_weather_data', 'descriptive_stats', 'value_counts_summary']</td></tr></table>
+</body></html>

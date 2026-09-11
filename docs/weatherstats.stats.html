@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Python: module weatherstats.stats</title>
+</head><body>
+
+<table class="heading">
+<tr class="heading-text decor">
+<td class="title"> <br><strong class="title"><a href="weatherstats.html" class="white">weatherstats</a>.stats</strong></td>
+<td class="extra"><a href=".">index</a><br><a href="file:/home/claude/weather-project/src/weatherstats/stats.py">/home/claude/weather-project/src/weatherstats/stats.py</a></td></tr></table>
+    <p><span class="code">stats.py<br>
+--------<br>
+ <br>
+Pure statistics logic. Everything here operates on a DataFrame that is<br>
+already loaded (see :mod:`weatherstats.data_loader`) -- this module does<br>
+not know or care where the data came from, which is the point of<br>
+splitting it out as its own module.</span></p>
+<p>
+<table class="section">
+<tr class="decor pkg-content-decor heading-text">
+<td class="section-title" colspan=3> <br><strong class="bigsection">Modules</strong></td></tr>
+    
+<tr><td class="decor pkg-content-decor"><span class="code">      </span></td><td> </td>
+<td class="singlecolumn"><table><tr><td class="multicolumn"><a href="pandas.html">pandas</a><br>
+</td><td class="multicolumn"></td><td class="multicolumn"></td><td class="multicolumn"></td></tr></table></td></tr></table><p>
+<table class="section">
+<tr class="decor functions-decor heading-text">
+<td class="section-title" colspan=3> <br><strong class="bigsection">Functions</strong></td></tr>
+    
+<tr><td class="decor functions-decor"><span class="code">      </span></td><td> </td>
+<td class="singlecolumn"><dl><dt><a name="-descriptive_stats"><strong>descriptive_stats</strong></a>(df: 'pd.DataFrame', columns: 'Optional[Sequence[str]]' = None) -&gt; 'pd.DataFrame'</dt><dd><span class="code">Compute descriptive statistics for the numeric columns of ``df``.<br>
+ <br>
+Parameters<br>
+----------<br>
+df : pandas.DataFrame<br>
+columns : sequence of str, optional<br>
+    Restrict the computation to these columns. Defaults to every<br>
+    numeric column in ``df``.<br>
+ <br>
+Returns<br>
+-------<br>
+pandas.DataFrame<br>
+    One row per statistic (count, mean, median, mode, std, min,<br>
+    max, range) and one column per numeric field.</span></dd></dl>
+ <dl><dt><a name="-value_counts_summary"><strong>value_counts_summary</strong></a>(df: 'pd.DataFrame', column: 'str', top_n: 'int' = 5) -&gt; 'pd.Series'</dt><dd><span class="code">Convenience helper for categorical columns (e.g. ``Location`` or<br>
+``RainToday``): the ``top_n`` most frequent values and their counts.</span></dd></dl>
+</td></tr></table><p>
+<table class="section">
+<tr class="decor data-decor heading-text">
+<td class="section-title" colspan=3> <br><strong class="bigsection">Data</strong></td></tr>
+    
+<tr><td class="decor data-decor"><span class="code">      </span></td><td> </td>
+<td class="singlecolumn"><strong>Optional</strong> = typing.Optional<br>
+<strong>Sequence</strong> = typing.Sequence</td></tr></table>
+</body></html>
