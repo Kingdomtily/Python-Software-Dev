@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Python: package weatherstats</title>
+</head><body>
+
+<table class="heading">
+<tr class="heading-text decor">
+<td class="title">&nbsp;<br><strong class="title">weatherstats</strong> (version 0.1.0)</td>
+<td class="extra"><a href=".">index</a><br><a href="file:/home/claude/weather-module2/src/weatherstats/__init__.py">/home/claude/weather-module2/src/weatherstats/__init__.py</a></td></tr></table>
+    <p><span class="code">weatherstats<br>
+============<br>
+&nbsp;<br>
+A&nbsp;small,&nbsp;installable&nbsp;package&nbsp;for&nbsp;loading&nbsp;the&nbsp;Kaggle&nbsp;"Rain&nbsp;in&nbsp;Australia"<br>
+weather&nbsp;dataset&nbsp;with&nbsp;pandas&nbsp;and&nbsp;computing&nbsp;descriptive&nbsp;statistics&nbsp;on&nbsp;it.<br>
+&nbsp;<br>
+This&nbsp;package&nbsp;exists&nbsp;to&nbsp;demonstrate&nbsp;*modularization*:&nbsp;the&nbsp;loading&nbsp;logic,<br>
+the&nbsp;statistics&nbsp;logic,&nbsp;and&nbsp;the&nbsp;reporting&nbsp;logic&nbsp;each&nbsp;live&nbsp;in&nbsp;their&nbsp;own<br>
+module,&nbsp;and&nbsp;are&nbsp;re-exported&nbsp;here&nbsp;so&nbsp;that&nbsp;consumers&nbsp;can&nbsp;simply&nbsp;do::<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;import&nbsp;weatherstats&nbsp;as&nbsp;ws<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;df&nbsp;=&nbsp;ws.<a href="#-load_weather_data">load_weather_data</a>("data/weatherAUS.csv")<br>
+&nbsp;&nbsp;&nbsp;&nbsp;stats_table&nbsp;=&nbsp;ws.<a href="#-descriptive_stats">descriptive_stats</a>(df)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;report_text,&nbsp;_&nbsp;=&nbsp;ws.<a href="#-generate_summary_report">generate_summary_report</a>(df)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;print(report_text)<br>
+&nbsp;<br>
+exactly&nbsp;the&nbsp;way&nbsp;you&nbsp;would&nbsp;use&nbsp;any&nbsp;other&nbsp;installed&nbsp;third-party&nbsp;library<br>
+(pandas,&nbsp;numpy,&nbsp;etc.)&nbsp;after&nbsp;``pip&nbsp;install&nbsp;-e&nbsp;.``.</span></p>
+<p>
+<table class="section">
+<tr class="decor pkg-content-decor heading-text">
+<td class="section-title" colspan=3>&nbsp;<br><strong class="bigsection">Package Contents</strong></td></tr>
+    
+<tr><td class="decor pkg-content-decor"><span class="code">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></td><td>&nbsp;</td>
+<td class="singlecolumn"><table><tr><td class="multicolumn"><a href="weatherstats.data_loader.html">data_loader</a><br>
+</td><td class="multicolumn"><a href="weatherstats.report.html">report</a><br>
+</td><td class="multicolumn"><a href="weatherstats.stats.html">stats</a><br>
+</td><td class="multicolumn"></td></tr></table></td></tr></table><p>
+<table class="section">
+<tr class="decor functions-decor heading-text">
+<td class="section-title" colspan=3>&nbsp;<br><strong class="bigsection">Functions</strong></td></tr>
+    
+<tr><td class="decor functions-decor"><span class="code">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></td><td>&nbsp;</td>
+<td class="singlecolumn"><dl><dt><a name="-descriptive_stats"><strong>descriptive_stats</strong></a>(df: 'pd.DataFrame', columns: 'Optional[Sequence[str]]' = None) -&gt; 'pd.DataFrame'</dt><dd><span class="code">Compute&nbsp;descriptive&nbsp;statistics&nbsp;for&nbsp;the&nbsp;numeric&nbsp;columns&nbsp;of&nbsp;``df``.<br>
+&nbsp;<br>
+Parameters<br>
+----------<br>
+df&nbsp;:&nbsp;pandas.DataFrame<br>
+columns&nbsp;:&nbsp;sequence&nbsp;of&nbsp;str,&nbsp;optional<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Restrict&nbsp;the&nbsp;computation&nbsp;to&nbsp;these&nbsp;columns.&nbsp;Defaults&nbsp;to&nbsp;every<br>
+&nbsp;&nbsp;&nbsp;&nbsp;numeric&nbsp;column&nbsp;in&nbsp;``df``.<br>
+&nbsp;<br>
+Returns<br>
+-------<br>
+pandas.DataFrame<br>
+&nbsp;&nbsp;&nbsp;&nbsp;One&nbsp;row&nbsp;per&nbsp;statistic&nbsp;(count,&nbsp;mean,&nbsp;median,&nbsp;mode,&nbsp;std,&nbsp;min,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;max,&nbsp;range)&nbsp;and&nbsp;one&nbsp;column&nbsp;per&nbsp;numeric&nbsp;field,&nbsp;so&nbsp;it&nbsp;prints&nbsp;as&nbsp;a<br>
+&nbsp;&nbsp;&nbsp;&nbsp;clean&nbsp;table.</span></dd></dl>
+ <dl><dt><a name="-generate_summary_report"><strong>generate_summary_report</strong></a>(df: 'pd.DataFrame', columns: 'Optional[Sequence[str]]' = None, title: 'str' = 'Weather Dataset Summary') -&gt; 'Tuple[str, pd.DataFrame]'</dt><dd><span class="code">Build&nbsp;a&nbsp;printable&nbsp;descriptive-statistics&nbsp;report&nbsp;for&nbsp;``df``.<br>
+&nbsp;<br>
+Parameters<br>
+----------<br>
+df&nbsp;:&nbsp;pandas.DataFrame<br>
+columns&nbsp;:&nbsp;sequence&nbsp;of&nbsp;str,&nbsp;optional<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Passed&nbsp;through&nbsp;to&nbsp;:func:`weatherstats.stats.descriptive_stats`.<br>
+title&nbsp;:&nbsp;str<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Heading&nbsp;for&nbsp;the&nbsp;report.<br>
+&nbsp;<br>
+Returns<br>
+-------<br>
+(report_text,&nbsp;stats_table)&nbsp;:&nbsp;tuple[str,&nbsp;pandas.DataFrame]<br>
+&nbsp;&nbsp;&nbsp;&nbsp;``report_text``&nbsp;is&nbsp;ready&nbsp;to&nbsp;``print()``;&nbsp;``stats_table``&nbsp;is&nbsp;the<br>
+&nbsp;&nbsp;&nbsp;&nbsp;underlying&nbsp;DataFrame&nbsp;in&nbsp;case&nbsp;the&nbsp;caller&nbsp;wants&nbsp;to&nbsp;export&nbsp;it<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(e.g.&nbsp;to&nbsp;CSV)&nbsp;instead&nbsp;of&nbsp;/&nbsp;in&nbsp;addition&nbsp;to&nbsp;printing&nbsp;it.</span></dd></dl>
+ <dl><dt><a name="-load_and_combine_weather_data"><strong>load_and_combine_weather_data</strong></a>(csv_paths: 'Iterable[Union[str, Path]]', add_source_column: 'bool' = True) -&gt; 'pd.DataFrame'</dt><dd><span class="code">Load&nbsp;and&nbsp;concatenate&nbsp;several&nbsp;weather&nbsp;CSVs&nbsp;into&nbsp;one&nbsp;DataFrame.<br>
+&nbsp;<br>
+This&nbsp;is&nbsp;for&nbsp;dataset&nbsp;variants&nbsp;that&nbsp;ship&nbsp;pre-split&nbsp;across&nbsp;multiple<br>
+files&nbsp;(e.g.&nbsp;``Weather&nbsp;Training&nbsp;Data.csv``&nbsp;+&nbsp;``Weather&nbsp;Test&nbsp;Data.csv``)<br>
+--&nbsp;useful&nbsp;when&nbsp;a&nbsp;single&nbsp;split&nbsp;falls&nbsp;short&nbsp;of&nbsp;a&nbsp;minimum&nbsp;row-count<br>
+requirement&nbsp;but&nbsp;the&nbsp;files&nbsp;together&nbsp;clear&nbsp;it.&nbsp;Columns&nbsp;that&nbsp;exist&nbsp;in<br>
+some&nbsp;files&nbsp;but&nbsp;not&nbsp;others&nbsp;(for&nbsp;example&nbsp;a&nbsp;``RainTomorrow``&nbsp;target<br>
+column&nbsp;present&nbsp;only&nbsp;in&nbsp;a&nbsp;training&nbsp;split)&nbsp;are&nbsp;aligned&nbsp;automatically;<br>
+rows&nbsp;from&nbsp;files&nbsp;missing&nbsp;a&nbsp;column&nbsp;simply&nbsp;get&nbsp;``NaN``&nbsp;there.<br>
+&nbsp;<br>
+Parameters<br>
+----------<br>
+csv_paths&nbsp;:&nbsp;iterable&nbsp;of&nbsp;str&nbsp;or&nbsp;pathlib.Path<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Paths&nbsp;to&nbsp;the&nbsp;CSV&nbsp;files&nbsp;to&nbsp;combine,&nbsp;in&nbsp;order.<br>
+add_source_column&nbsp;:&nbsp;bool<br>
+&nbsp;&nbsp;&nbsp;&nbsp;If&nbsp;True&nbsp;(default),&nbsp;add&nbsp;a&nbsp;``source_file``&nbsp;column&nbsp;recording&nbsp;which<br>
+&nbsp;&nbsp;&nbsp;&nbsp;input&nbsp;file&nbsp;each&nbsp;row&nbsp;came&nbsp;from&nbsp;--&nbsp;useful&nbsp;since&nbsp;some&nbsp;pre-split<br>
+&nbsp;&nbsp;&nbsp;&nbsp;datasets&nbsp;reuse&nbsp;the&nbsp;same&nbsp;row-id&nbsp;values&nbsp;(e.g.&nbsp;"Row0")&nbsp;across<br>
+&nbsp;&nbsp;&nbsp;&nbsp;their&nbsp;train&nbsp;and&nbsp;test&nbsp;files.<br>
+&nbsp;<br>
+Returns<br>
+-------<br>
+pandas.DataFrame<br>
+&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;concatenated&nbsp;data,&nbsp;with&nbsp;a&nbsp;fresh&nbsp;0-based&nbsp;index.<br>
+&nbsp;<br>
+Raises<br>
+------<br>
+FileNotFoundError<br>
+&nbsp;&nbsp;&nbsp;&nbsp;If&nbsp;any&nbsp;path&nbsp;in&nbsp;``csv_paths``&nbsp;does&nbsp;not&nbsp;exist.<br>
+ValueError<br>
+&nbsp;&nbsp;&nbsp;&nbsp;If&nbsp;``csv_paths``&nbsp;is&nbsp;empty.</span></dd></dl>
+ <dl><dt><a name="-load_weather_data"><strong>load_weather_data</strong></a>(csv_path: 'Union[str, Path]', usecols: 'Optional[Sequence[str]]' = None) -&gt; 'pd.DataFrame'</dt><dd><span class="code">Load&nbsp;a&nbsp;single&nbsp;weather-dataset&nbsp;CSV&nbsp;into&nbsp;a&nbsp;pandas&nbsp;DataFrame.<br>
+&nbsp;<br>
+Works&nbsp;with&nbsp;any&nbsp;of&nbsp;the&nbsp;common&nbsp;Kaggle&nbsp;"Rain&nbsp;in&nbsp;Australia"&nbsp;variants:<br>
+a&nbsp;``weatherAUS.csv``&nbsp;with&nbsp;a&nbsp;``Date``&nbsp;column,&nbsp;or&nbsp;a<br>
+``Weather&nbsp;Training/Test&nbsp;Data.csv``&nbsp;file&nbsp;indexed&nbsp;by&nbsp;``row&nbsp;ID``.&nbsp;Any<br>
+recognized&nbsp;date&nbsp;column&nbsp;that&nbsp;is&nbsp;actually&nbsp;present&nbsp;is&nbsp;parsed&nbsp;as&nbsp;a<br>
+real&nbsp;datetime;&nbsp;everything&nbsp;else&nbsp;is&nbsp;left&nbsp;as&nbsp;pandas&nbsp;infers&nbsp;it.<br>
+&nbsp;<br>
+Parameters<br>
+----------<br>
+csv_path&nbsp;:&nbsp;str&nbsp;or&nbsp;pathlib.Path<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Path&nbsp;to&nbsp;the&nbsp;weather&nbsp;CSV&nbsp;file.<br>
+usecols&nbsp;:&nbsp;sequence&nbsp;of&nbsp;str,&nbsp;optional<br>
+&nbsp;&nbsp;&nbsp;&nbsp;If&nbsp;given,&nbsp;only&nbsp;load&nbsp;these&nbsp;columns&nbsp;(passed&nbsp;straight&nbsp;through&nbsp;to<br>
+&nbsp;&nbsp;&nbsp;&nbsp;``pandas.read_csv``).<br>
+&nbsp;<br>
+Returns<br>
+-------<br>
+pandas.DataFrame<br>
+&nbsp;<br>
+Raises<br>
+------<br>
+FileNotFoundError<br>
+&nbsp;&nbsp;&nbsp;&nbsp;If&nbsp;``csv_path``&nbsp;does&nbsp;not&nbsp;exist.</span></dd></dl>
+</td></tr></table><p>
+<table class="section">
+<tr class="decor data-decor heading-text">
+<td class="section-title" colspan=3>&nbsp;<br><strong class="bigsection">Data</strong></td></tr>
+    
+<tr><td class="decor data-decor"><span class="code">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></td><td>&nbsp;</td>
+<td class="singlecolumn"><strong>__all__</strong> = ['load_weather_data', 'load_and_combine_weather_data', 'descriptive_stats', 'generate_summary_report']</td></tr></table>
+</body></html>

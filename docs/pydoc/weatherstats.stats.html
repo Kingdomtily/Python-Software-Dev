@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Python: module weatherstats.stats</title>
+</head><body>
+
+<table class="heading">
+<tr class="heading-text decor">
+<td class="title">&nbsp;<br><strong class="title"><a href="weatherstats.html" class="white">weatherstats</a>.stats</strong></td>
+<td class="extra"><a href=".">index</a><br><a href="file:/home/claude/weather-module2/src/weatherstats/stats.py">/home/claude/weather-module2/src/weatherstats/stats.py</a></td></tr></table>
+    <p><span class="code">stats.py<br>
+--------<br>
+&nbsp;<br>
+Pure&nbsp;statistics&nbsp;logic.&nbsp;Everything&nbsp;here&nbsp;operates&nbsp;on&nbsp;a&nbsp;DataFrame&nbsp;that&nbsp;is<br>
+already&nbsp;loaded&nbsp;(see&nbsp;:mod:`weatherstats.data_loader`)&nbsp;--&nbsp;this&nbsp;module&nbsp;does<br>
+not&nbsp;know&nbsp;or&nbsp;care&nbsp;where&nbsp;the&nbsp;data&nbsp;came&nbsp;from,&nbsp;which&nbsp;is&nbsp;the&nbsp;point&nbsp;of<br>
+splitting&nbsp;it&nbsp;out&nbsp;as&nbsp;its&nbsp;own&nbsp;module.</span></p>
+<p>
+<table class="section">
+<tr class="decor pkg-content-decor heading-text">
+<td class="section-title" colspan=3>&nbsp;<br><strong class="bigsection">Modules</strong></td></tr>
+    
+<tr><td class="decor pkg-content-decor"><span class="code">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></td><td>&nbsp;</td>
+<td class="singlecolumn"><table><tr><td class="multicolumn"><a href="pandas.html">pandas</a><br>
+</td><td class="multicolumn"></td><td class="multicolumn"></td><td class="multicolumn"></td></tr></table></td></tr></table><p>
+<table class="section">
+<tr class="decor functions-decor heading-text">
+<td class="section-title" colspan=3>&nbsp;<br><strong class="bigsection">Functions</strong></td></tr>
+    
+<tr><td class="decor functions-decor"><span class="code">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></td><td>&nbsp;</td>
+<td class="singlecolumn"><dl><dt><a name="-descriptive_stats"><strong>descriptive_stats</strong></a>(df: 'pd.DataFrame', columns: 'Optional[Sequence[str]]' = None) -&gt; 'pd.DataFrame'</dt><dd><span class="code">Compute&nbsp;descriptive&nbsp;statistics&nbsp;for&nbsp;the&nbsp;numeric&nbsp;columns&nbsp;of&nbsp;``df``.<br>
+&nbsp;<br>
+Parameters<br>
+----------<br>
+df&nbsp;:&nbsp;pandas.DataFrame<br>
+columns&nbsp;:&nbsp;sequence&nbsp;of&nbsp;str,&nbsp;optional<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Restrict&nbsp;the&nbsp;computation&nbsp;to&nbsp;these&nbsp;columns.&nbsp;Defaults&nbsp;to&nbsp;every<br>
+&nbsp;&nbsp;&nbsp;&nbsp;numeric&nbsp;column&nbsp;in&nbsp;``df``.<br>
+&nbsp;<br>
+Returns<br>
+-------<br>
+pandas.DataFrame<br>
+&nbsp;&nbsp;&nbsp;&nbsp;One&nbsp;row&nbsp;per&nbsp;statistic&nbsp;(count,&nbsp;mean,&nbsp;median,&nbsp;mode,&nbsp;std,&nbsp;min,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;max,&nbsp;range)&nbsp;and&nbsp;one&nbsp;column&nbsp;per&nbsp;numeric&nbsp;field,&nbsp;so&nbsp;it&nbsp;prints&nbsp;as&nbsp;a<br>
+&nbsp;&nbsp;&nbsp;&nbsp;clean&nbsp;table.</span></dd></dl>
+ <dl><dt><a name="-value_counts_summary"><strong>value_counts_summary</strong></a>(df: 'pd.DataFrame', column: 'str', top_n: 'int' = 5) -&gt; 'pd.Series'</dt><dd><span class="code">Convenience&nbsp;helper&nbsp;for&nbsp;categorical&nbsp;columns&nbsp;(e.g.&nbsp;``Location``&nbsp;or<br>
+``RainToday``):&nbsp;the&nbsp;``top_n``&nbsp;most&nbsp;frequent&nbsp;values&nbsp;and&nbsp;their&nbsp;counts.</span></dd></dl>
+</td></tr></table><p>
+<table class="section">
+<tr class="decor data-decor heading-text">
+<td class="section-title" colspan=3>&nbsp;<br><strong class="bigsection">Data</strong></td></tr>
+    
+<tr><td class="decor data-decor"><span class="code">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></td><td>&nbsp;</td>
+<td class="singlecolumn"><strong>Optional</strong> = typing.Optional<br>
+<strong>Sequence</strong> = typing.Sequence</td></tr></table>
+</body></html>
