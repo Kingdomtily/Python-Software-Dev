@@ -1,5 +1,6 @@
-import csv
 '''This program reads from and writes to different csv files'''
+import csv
+
 
 def load_csv(filename):
     '''grab all of the data from the csv and append it to weather_data, then returns weather data as a list'''
