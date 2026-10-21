@@ -4,7 +4,7 @@ This project is designed to interact with CSVs and read/write to files.
 
 # What Does it do?
 
-Currently this only loads `Weather Test Data.csv` and writes that content to `test`
+Currently this only loads `Weather Training Data.csv` and writes that content to `output.csv`
 
 # Functions
 
@@ -28,4 +28,4 @@ csv
 
 # Usage
 
-Currently no usage, project is more setting up an environment to use for the class.
+Currently only reads a file and writes to another file, maintaining the csv format.
