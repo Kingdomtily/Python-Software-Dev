@@ -1,17 +1,18 @@
 import csv
+'''This program reads from and writes to different csv files'''
 
 def load_csv(filename):
-    '''grab all of the data from the csv and append it to weather_data'''
+    '''grab all of the data from the csv and append it to weather_data, then returns weather data as a list'''
     weather_data = []
-    with open(filename, mode="r", encoding="utf-8") as file:
+    with open(filename, mode="r", encoding="utf-8", newline="") as file:
         content = csv.reader(file)
         for row in content:
             weather_data.append(row)
         return weather_data
 
 def write_csv(filename, data):
-    '''Take weather_data and write it to a new file'''
-    with open(filename, mode="w", encoding="utf-8") as file:
+    '''Take data and write it to a new file'''
+    with open(filename, mode="w", encoding="utf-8", newline="") as file:
         writer = csv.writer(file)
         for row in data:
             writer.writerow(row)

@@ -9,7 +9,7 @@ Currently this only loads `Weather Training Data.csv` and writes that content to
 # Functions
 
 ## load_csv()
-`load_csv()` takes one parameter, *filename* and opens that file. It loads all of the data inside to a list called `weather_data`. It then returns that value. Currently it is only set up to take "Weather test data.csv", in the future it may be possible to be an input for the user to enter.
+`load_csv()` takes one parameter, *filename* and opens that file. It loads all of the data inside to a list called `weather_data`. It then returns that value. Currently it is only set up to take "Weather Training data.csv", in the future it may be possible to be an input for the user to enter.
 ## write_csv()
 `write_csv()` takes two parameters, *filename* and *data*. The filename is the destination that the program is writing to, while data is the information that is being written there. Currently the filename is set to `output.csv`.
 
@@ -20,6 +20,9 @@ Weather Test Data.csv, this is the Australia weather data from Kaggle [Kaggle](h
 # Built with
 
 Python 3.14.7
+windows 11
+VS Code
+[GitHub](www.github.com/kingdomtily)
 
 # Prerequisites
 

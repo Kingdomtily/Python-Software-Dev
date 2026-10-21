@@ -1,2 +1,4 @@
 __pycache__/
 project_submissions/
+output.csv
+.venv
