@@ -6,3 +6,5 @@ output.csv
 dist/
 build/
 *.log
+.coverage
+.pytest_cache/

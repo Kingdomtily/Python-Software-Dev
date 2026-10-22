@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "weatherstats-kingdomtily"
-version = "0.0.1"
+version = "0.2.0"
 description = "Load weather CSV data with pandas and calculate descriptive statistics."
 readme = "README.md"
 requires-python = ">=3.11"
@@ -22,3 +22,8 @@ classifiers = [
 ]
 [project.urls]
 Homepage = "https://github.com/Kingdomtily/Python-Software-Dev"
+
+[tool.pytest.ini_options]
+testpaths = ["tests", "src"]
+pythonpath = ["."]
+addopts = "--doctest-modules"

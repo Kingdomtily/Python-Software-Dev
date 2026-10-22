@@ -10,7 +10,7 @@ class DataSource(ABC):
     """Base class, every data source must have a fetch method."""
     @abstractmethod
     def fetch(self):
-        pass
+        """Returns the data as a DataFrame."""
 
 class CsvFileSource(DataSource):
     """Fetches data from a single csv file."""

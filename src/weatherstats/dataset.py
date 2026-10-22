@@ -4,7 +4,12 @@ import logging
 logger = logging.getLogger(__name__)
 
 class WeatherDataset:
-    """Holds the weather data and can save it to a csv file."""
+    """Holds the weather data and can save it to a csv file.
+
+    >>> import pandas as pd
+    >>> print(WeatherDataset(pd.DataFrame({"MinTemp": [1, 2, 3]})))
+    WeatherDataset with 3 rows
+    """
     def __init__(self, data):
         self._data = data
 
