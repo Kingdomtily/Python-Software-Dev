@@ -1,0 +1,10 @@
+README.md
+pyproject.toml
+src/weatherstats/__init__.py
+src/weatherstats/loader.py
+src/weatherstats/stats.py
+src/weatherstats_yourname.egg-info/PKG-INFO
+src/weatherstats_yourname.egg-info/SOURCES.txt
+src/weatherstats_yourname.egg-info/dependency_links.txt
+src/weatherstats_yourname.egg-info/requires.txt
+src/weatherstats_yourname.egg-info/top_level.txt
