@@ -6,7 +6,10 @@ def main():
     data = loader.load_csv("WeatherData/Weather Training Data.csv")
     loader.write_csv("output.csv", data)
     mintemp_mean = stats.calculate_mean(data, "MinTemp")
-    print(mintemp_mean)
+    mintemp_mode = stats.calculate_mode(data, "MinTemp")
+    mintemp_median = stats.calculate_median(data, "MinTemp")
+    mintemp_range = stats.calculate_range(data,"MinTemp")
+    print(f"mean: {mintemp_mean} \nmode: {mintemp_mode} \nmedian: {mintemp_median} \nrange: {mintemp_range}")
 
 
 if __name__ == "__main__":
