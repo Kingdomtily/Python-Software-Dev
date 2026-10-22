@@ -2,3 +2,6 @@ __pycache__/
 project_submissions/
 output.csv
 .venv
+*.egg-info/
+dist/
+build/
