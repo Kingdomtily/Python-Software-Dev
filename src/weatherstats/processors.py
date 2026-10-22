@@ -1,5 +1,7 @@
 """Class for calculating statistics on a WeatherDataset."""
 import logging
+import math
+from functools import reduce
 
 logger = logging.getLogger(__name__)
 
@@ -38,3 +40,25 @@ class StatsProcessor:
                 "mode": self.calculate_mode(column),
                 "range": self.calculate_range(column),
             }
+
+    def filter_rows(self, condition):
+        """Returns the rows where condition(row) is True, using filter."""
+        return list(filter(condition, self.dataset.data.itertuples(index=False)))
+
+    @staticmethod
+    def average(values):
+        """Averages numbers with reduce, skipping missing values."""
+        numbers = list(filter(lambda value: not math.isnan(value), values))
+        if not numbers:
+            raise ValueError("No values to average")
+        return reduce(lambda total, value: total + value, numbers) / len(numbers)
+
+    def average_where(self, column, condition):
+        """Averages a column over only the rows where condition(row) is True."""
+        rows = self.filter_rows(condition)
+        return self.average(map(lambda row: getattr(row, column), rows))
+
+    def average_by_location(self, column):
+        """Returns {location: average of column}, built with map and a lambda."""
+        groups = self._column(column).groupby(self._column("Location"))
+        return dict(map(lambda item: (item[0], item[1].mean()), groups))

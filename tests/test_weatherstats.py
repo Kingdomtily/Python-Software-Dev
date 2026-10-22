@@ -6,6 +6,19 @@ import main
 from weatherstats.data_sources import DataSource, CsvFileSource, CombinedCsvSource
 from weatherstats.dataset import WeatherDataset
 from weatherstats.processors import StatsProcessor
+from weatherstats.charts import WeatherCharts
+
+
+def weather_frame():
+    """Small DataFrame with the columns the analysis and charts use."""
+    return pd.DataFrame({
+        "Location": ["Sydney", "Sydney", "Perth", "Perth", "Darwin"],
+        "MinTemp": [1.0, 2.0, 2.0, 3.0, 3.0],
+        "MaxTemp": [10.0, 36.0, 30.0, 40.0, 50.0],
+        "Rainfall": [0.0, 4.0, 0.0, 1.0, 10.0],
+        "Humidity3pm": [40.0, 80.0, None, 50.0, 70.0],
+        "RainToday": ["No", "Yes", "No", "No", "Yes"],
+    })
 
 
 @pytest.fixture
@@ -13,9 +26,16 @@ def csv_files(tmp_path):
     """Two small csv files with the same columns as the weather data."""
     first = tmp_path / "first.csv"
     second = tmp_path / "second.csv"
-    pd.DataFrame({"MinTemp": [1.0, 2.0, 2.0], "MaxTemp": [10.0, 20.0, 30.0], "Rainfall": [0.0, 0.0, 5.0]}).to_csv(first, index=False)
-    pd.DataFrame({"MinTemp": [3.0, 3.0], "MaxTemp": [40.0, 50.0], "Rainfall": [1.0, 0.0]}).to_csv(second, index=False)
+    data = weather_frame()
+    data.iloc[:3].to_csv(first, index=False)
+    data.iloc[3:].to_csv(second, index=False)
     return first, second
+
+
+@pytest.fixture
+def weather_processor():
+    """StatsProcessor over the small weather DataFrame."""
+    return StatsProcessor(WeatherDataset(weather_frame()))
 
 
 @pytest.fixture
@@ -35,7 +55,7 @@ def test_data_source_cannot_be_created():
 def test_csv_source_fetch_reads_all_rows(csv_files):
     data = CsvFileSource(csv_files[0]).fetch()
     assert len(data) == 3
-    assert list(data.columns) == ["MinTemp", "MaxTemp", "Rainfall"]
+    assert list(data.columns) == list(weather_frame().columns)
 
 
 def test_csv_source_reads_in_chunks(csv_files):
@@ -126,6 +146,45 @@ def test_summarize_yields_one_column_at_a_time(processor):
     assert len(list(results)) == 1
 
 
+def test_filter_rows_with_lambda(weather_processor):
+    hot_days = weather_processor.filter_rows(lambda row: row.MaxTemp >= 35)
+    assert [row.MaxTemp for row in hot_days] == [36.0, 40.0, 50.0]
+
+
+def test_average_skips_missing_values():
+    assert StatsProcessor.average([2.0, float("nan"), 4.0]) == 3.0
+
+
+def test_average_of_nothing_raises():
+    with pytest.raises(ValueError):
+        StatsProcessor.average([float("nan")])
+
+
+def test_average_where(weather_processor):
+    assert weather_processor.average_where("Humidity3pm", lambda row: row.RainToday == "Yes") == 75.0
+    assert weather_processor.average_where("Humidity3pm", lambda row: row.RainToday == "No") == 45.0
+
+
+def test_average_by_location(weather_processor):
+    assert weather_processor.average_by_location("Rainfall") == {"Darwin": 10.0, "Perth": 0.5, "Sydney": 2.0}
+
+
+# charts.py (the charts themselves are checked by looking at them)
+
+def test_charts_are_saved(weather_processor, tmp_path):
+    charts = WeatherCharts(weather_processor, tmp_path / "charts")
+    paths = [charts.rainfall_by_location(top=2), charts.max_temp_histogram(), charts.humidity_rain_vs_dry()]
+    assert all(path.exists() and path.suffix == ".png" for path in paths)
+
+
+def test_chart_bad_folder(weather_processor, tmp_path, caplog):
+    blocker = tmp_path / "not_a_folder"
+    blocker.write_text("")
+    with pytest.raises(OSError):
+        WeatherCharts(weather_processor, blocker).max_temp_histogram()
+    assert "Could not save chart" in caplog.text
+
+
 # main.py
 
 def test_main_prints_stats(csv_files, tmp_path, monkeypatch, capsys):
@@ -138,7 +197,9 @@ def test_main_prints_stats(csv_files, tmp_path, monkeypatch, capsys):
     output = capsys.readouterr().out
     assert "WeatherDataset with 5 rows" in output
     assert "Rainfall" in output
+    assert "Days at or above 35C: 3" in output
     assert (tmp_path / "output.csv").exists()
+    assert len(list((tmp_path / "charts").glob("*.png"))) == 3
 
 
 def test_main_logs_error_when_files_missing(tmp_path, monkeypatch, caplog):

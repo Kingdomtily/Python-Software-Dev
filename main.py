@@ -3,6 +3,7 @@ import logging
 from weatherstats.data_sources import CombinedCsvSource
 from weatherstats.dataset import WeatherDataset
 from weatherstats.processors import StatsProcessor
+from weatherstats.charts import WeatherCharts
 
 logger = logging.getLogger(__name__)
 
@@ -19,6 +20,17 @@ def main():
             print(column)
             for name, value in stats.items():
                 print(f"  {name}: {value}")
+
+        hot_days = processor.filter_rows(lambda row: row.MaxTemp >= 35)
+        rainy_days = processor.filter_rows(lambda row: row.RainToday == "Yes")
+        print(f"Days at or above 35C: {len(hot_days)}")
+        print(f"Rainy days: {len(rainy_days)}")
+        print(f"Average 3pm humidity on rainy days: {processor.average_where('Humidity3pm', lambda row: row.RainToday == 'Yes'):.1f}%")
+        print(f"Average 3pm humidity on dry days: {processor.average_where('Humidity3pm', lambda row: row.RainToday == 'No'):.1f}%")
+
+        charts = WeatherCharts(processor)
+        for make_chart in (charts.rainfall_by_location, charts.max_temp_histogram, charts.humidity_rain_vs_dry):
+            print(f"Saved {make_chart()}")
     except (OSError, KeyError, ValueError) as error:
         logger.error("Program stopped: %s", error)
 
