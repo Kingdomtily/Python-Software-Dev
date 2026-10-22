@@ -10,3 +10,7 @@ def write_csv(filename, data):
     '''Writes data to a file specified with filename'''
     output_data = pd.DataFrame(data)
     output_data.to_csv(filename, index=False)
+
+def file_concat(data1, data2):
+    """Condenses the two loaded csvs into one, a bigger dataset to use"""
+    return pd.concat([data1,data2], ignore_index=True)
