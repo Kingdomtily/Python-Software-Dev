@@ -7,6 +7,7 @@ from weatherstats.data_sources import DataSource, CsvFileSource, CombinedCsvSour
 from weatherstats.dataset import WeatherDataset
 from weatherstats.processors import StatsProcessor
 from weatherstats.charts import WeatherCharts
+import asyncio
 
 
 def weather_frame():
@@ -88,6 +89,12 @@ def test_combined_source_fetch_combines_files(csv_files):
     assert list(data.index) == [0, 1, 2, 3, 4]
 
 
+def test_combined_source_async_fetch_matches_fetch(csv_files):
+    source = CombinedCsvSource(csv_files)
+    async_data = asyncio.run(source.async_fetch())
+    pd.testing.assert_frame_equal(async_data, source.fetch())
+
+
 # dataset.py
 
 def test_dataset_from_source(csv_files):
@@ -144,6 +151,11 @@ def test_summarize_yields_one_column_at_a_time(processor):
     assert column == "MinTemp"
     assert stats == {"mean": pytest.approx(2.4), "median": 3.0, "mode": 1.0, "range": 3.0}
     assert len(list(results)) == 1
+
+def test_summarize_parallel_matches_summarize(weather_processor):
+    columns = ["MinTemp", "MaxTemp", "Rainfall"]
+    parallel = weather_processor.summarize_parallel_stats(columns)
+    assert parallel == list(weather_processor.summarize(columns))
 
 
 def test_filter_rows_with_lambda(weather_processor):
@@ -206,3 +218,4 @@ def test_main_logs_error_when_files_missing(tmp_path, monkeypatch, caplog):
     monkeypatch.chdir(tmp_path)
     main.main()
     assert "Program stopped" in caplog.text
+

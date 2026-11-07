@@ -79,6 +79,16 @@ Made with matplotlib in the new `WeatherCharts` class (`charts.py`) and saved as
 2. Daily Maximum Temperature (histogram): shows how hot a typical day gets. 
 3. Average 3pm Humidity: Rainy vs Dry Days (bar chart): checks whether humidity goes with rain.
 
+### Module 7: Parallelism and Async
+
+#### Parallelism
+We implemented this change to calculate on separate cores. We couldn't do this witht threads due to Python's gil. This currently doesn't make a noticeable difference due to the dataset not being massive, but it should speed up the process. I chose to use ProcessPoolExecuter from concurrent.futures.
+The code that utilizes this is `StatsProcessor.summarize_parallel_stats`
+
+#### Asynchronous features
+We added async features because reading files is I/O bound, so it ends up waiting on the disk. Async will let us load both files at once. Which again, should speed stuff up (not in too much of a noticeable way, but good to get the practice anyways.) I chose to use asyncio.gather and asyncio.to_thread from asyncio
+The code that utilizes this is `CombinedCsvSource.async_fetch`
+
 ## Testing
 
 Run the tests:
@@ -115,7 +125,9 @@ pytest --cov=weatherstats --cov=main --cov-report=term-missing
 | 25 | `test_main_prints_stats` | `main()` prints the stats and patterns, writes `output.csv`, and saves 3 charts |
 | 26 | `test_main_logs_error_when_files_missing` | `main()` logs "Program stopped" instead of crashing |
 | 27 | Doctest in `WeatherDataset` | `print(dataset)` shows the row count |
-Result: 27 passed
+| 28 | `test_combined_source_async_fetch_matches_fetch` | Double checks that the async outputs the same value as the sync
+| 29 | `test_summarize_parallel_matches_summarize` | Double checks that the output of this new function matches the old one
+Result: 29 passed
 
 ## Documentation
 API documentation is generated from the docstrings with pydoc:

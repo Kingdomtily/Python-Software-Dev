@@ -1,5 +1,6 @@
 '''Main is where we interact with all of the code in other files throughouth the program'''
 import logging
+import asyncio
 from weatherstats.data_sources import CombinedCsvSource
 from weatherstats.dataset import WeatherDataset
 from weatherstats.processors import StatsProcessor
@@ -11,12 +12,13 @@ def main():
     '''Main function to include all of the program's instructions'''
     source = CombinedCsvSource(["WeatherData/Weather Training Data.csv", "WeatherData/Weather Test Data.csv"])
     try:
-        dataset = WeatherDataset.from_source(source)
+        data = asyncio.run(source.async_fetch())
+        dataset = WeatherDataset(data)
         dataset.save("output.csv")
         print(dataset)
 
         processor = StatsProcessor(dataset)
-        for column, stats in processor.summarize(["MinTemp", "MaxTemp", "Rainfall"]):
+        for column, stats in processor.summarize_parallel_stats(["MinTemp", "MaxTemp", "Rainfall"]):
             print(column)
             for name, value in stats.items():
                 print(f"  {name}: {value}")
@@ -34,6 +36,7 @@ def main():
     except (OSError, KeyError, ValueError) as error:
         logger.error("Program stopped: %s", error)
 
+    
 
 if __name__ == "__main__":
     logging.basicConfig(

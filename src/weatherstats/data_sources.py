@@ -3,6 +3,7 @@ import logging
 from abc import ABC, abstractmethod
 from pathlib import Path
 import pandas as pd
+import asyncio
 
 logger = logging.getLogger(__name__)
 
@@ -48,4 +49,10 @@ class CombinedCsvSource(DataSource):
     def fetch(self):
         data = pd.concat(self, ignore_index=True)
         logger.info("Combined %d files into %d rows", len(self.sources), len(data))
+        return data
+
+    async def async_fetch(self):
+        """"Designed to read both CSVs at the same time, as an async"""
+        frames = await asyncio.gather(*(asyncio.to_thread(source.fetch)for source in self.sources))
+        data = pd.concat(frames, ignore_index=True)
         return data

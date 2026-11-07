@@ -2,6 +2,7 @@
 import logging
 import math
 from functools import reduce
+from concurrent.futures import ProcessPoolExecutor
 
 logger = logging.getLogger(__name__)
 
@@ -62,3 +63,16 @@ class StatsProcessor:
         """Returns {location: average of column}, built with map and a lambda."""
         groups = self._column(column).groupby(self._column("Location"))
         return dict(map(lambda item: (item[0], item[1].mean()), groups))
+
+    def summarize_parallel_stats(self, columns):
+        with ProcessPoolExecutor() as executor:
+            return list(executor.map(parallel_stats, columns, [self._column(c) for c in columns]))
+
+def parallel_stats(column, values):
+    """Used to do the column statistics in parallel. Designed to do one column per process"""
+    return column, {
+        "mean": values.mean(),
+        "median": values.median(),
+        "mode": values.mode().iloc[0],
+        "range": values.max() - values.min()
+    }
