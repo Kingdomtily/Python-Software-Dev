@@ -89,6 +89,29 @@ The code that utilizes this is `StatsProcessor.summarize_parallel_stats`
 We added async features because reading files is I/O bound, so it ends up waiting on the disk. Async will let us load both files at once. Which again, should speed stuff up (not in too much of a noticeable way, but good to get the practice anyways.) I chose to use asyncio.gather and asyncio.to_thread from asyncio
 The code that utilizes this is `CombinedCsvSource.async_fetch`
 
+### Module 8: PySpark
+
+#### Where It Runs:
+Google collab with Spark in local mode as the virtual cluster. Spark will split the work in the machine's cores as a simulation of a real cluster splitting it across machines.
+
+#### How to run:
+```
+!pip install pyspark
+!git clone -b master https://github.com/Kingdomtily/Python-Software-Dev.git
+%cd Python-Software-Dev
+!pip install .
+!python main.py
+```
+
+#### What I changed:
+Main creats a spark session and stops it with finally, data_sources.py reads the csvs with spark.read.csv and combines them. Processors.py uses spark functions, such as F.mean, approxQuantile, and groupBy().count(). Dataset.py utilizes count() instead of len() because pyspark doesnt have a len() function. I also removed the processpoolexecutor and the asyncio loading due to Spark being able to do all of that work itself. summarize_parallel_stats and async_fetch were replaced this module.
+
+#### What I had to consider:
+Some of the methods used Spark did not have. Like I mentioned above, len didn't exist, as well as the pandas methods .median(), .mode(), and itertuples. Some things were needed for proper loading, like inferSchema=True. The missing values are different, rather than being NaN, it was None. So the hot days filter and average had to check for None rather than NaN.
+
+#### Results:
+After a few issues to get ironed out, the output is the same as before.
+
 ## Testing
 
 Run the tests:
@@ -127,7 +150,7 @@ pytest --cov=weatherstats --cov=main --cov-report=term-missing
 | 27 | Doctest in `WeatherDataset` | `print(dataset)` shows the row count |
 | 28 | `test_combined_source_async_fetch_matches_fetch` | Double checks that the async outputs the same value as the sync
 | 29 | `test_summarize_parallel_matches_summarize` | Double checks that the output of this new function matches the old one
-Result: 29 passed
+Result: 29 passed (In module 7, not updated for module 8)
 
 ## Documentation
 API documentation is generated from the docstrings with pydoc:
