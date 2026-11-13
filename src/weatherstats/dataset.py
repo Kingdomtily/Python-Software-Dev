@@ -4,12 +4,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 class WeatherDataset:
-    """Holds the weather data and can save it to a csv file.
-
-    >>> import pandas as pd
-    >>> print(WeatherDataset(pd.DataFrame({"MinTemp": [1, 2, 3]})))
-    WeatherDataset with 3 rows
-    """
+    """Holds the weather data and can save it to a csv file.WeatherDataset with 3 rows"""
     def __init__(self, data):
         self._data = data
 
@@ -26,14 +21,14 @@ class WeatherDataset:
         """Writes the data to a csv file."""
         try:
             with open(filename, "w", newline="", encoding="utf-8") as file:
-                self._data.to_csv(file, index=False)
+                self._data.toPandas().to_csv(file, index=False)
         except OSError as error:
             logger.error("Could not save to %s: %s", filename, error)
             raise
         logger.info("Saved %d rows to %s", len(self), filename)
 
     def __len__(self):
-        return len(self._data)
+        return self._data.count()
 
     def __str__(self):
         return f"WeatherDataset with {len(self)} rows"

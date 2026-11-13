@@ -9,6 +9,11 @@ version = "0.3.0"
 description = "Load weather CSV data with pandas and calculate descriptive statistics."
 readme = "README.md"
 requires-python = ">=3.11"
+dependencies = [
+  "pandas>=2.0",
+  "matplotlib>=3.7",
+  "pyspark",
+]
 authors = [
   { name = "TYLER FRANCOM" },
 ]

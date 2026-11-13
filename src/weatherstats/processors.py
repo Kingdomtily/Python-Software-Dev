@@ -3,6 +3,7 @@ import logging
 import math
 from functools import reduce
 from concurrent.futures import ProcessPoolExecutor
+from pyspark.sql import functions as F
 
 logger = logging.getLogger(__name__)
 
@@ -44,12 +45,12 @@ class StatsProcessor:
 
     def filter_rows(self, condition):
         """Returns the rows where condition(row) is True, using filter."""
-        return list(filter(condition, self.dataset.data.itertuples(index=False)))
+        return self.dataset.data.rdd.filter(condition).collect()
 
     @staticmethod
     def average(values):
         """Averages numbers with reduce, skipping missing values."""
-        numbers = list(filter(lambda value: not math.isnan(value), values))
+        numbers = list(filter(lambda value: value is not None, values))
         if not numbers:
             raise ValueError("No values to average")
         return reduce(lambda total, value: total + value, numbers) / len(numbers)
@@ -61,18 +62,28 @@ class StatsProcessor:
 
     def average_by_location(self, column):
         """Returns {location: average of column}, built with map and a lambda."""
-        groups = self._column(column).groupby(self._column("Location"))
-        return dict(map(lambda item: (item[0], item[1].mean()), groups))
+        rows = self.dataset.data.groupBy("Location").agg(F.avg(self._column(column))).collect()
+        return dict(map(lambda row: (row[0], row[1]), rows))
+    def _column(self, column):
+        if column not in self.dataset.data.columns:
+            logger.error("Column not found: %s", column)
+            raise KeyError(column)
+        return column
 
-    def summarize_parallel_stats(self, columns):
-        with ProcessPoolExecutor() as executor:
-            return list(executor.map(parallel_stats, columns, [self._column(c) for c in columns]))
+    def calculate_mean(self, column):
+        return self.dataset.data.select(F.mean(self._column(column))).first()[0]
 
-def parallel_stats(column, values):
-    """Used to do the column statistics in parallel. Designed to do one column per process"""
-    return column, {
-        "mean": values.mean(),
-        "median": values.median(),
-        "mode": values.mode().iloc[0],
-        "range": values.max() - values.min()
-    }
+    def calculate_median(self, column):
+        return self.dataset.data.approxQuantile(self._column(column), [0.5], 0.0)[0]
+
+    def calculate_mode(self, column):
+        """Returns the lowest value if there is a tie."""
+        col = self._column(column)
+        return (self.dataset.data.filter(F.col(col).isNotNull())
+                .groupBy(col).count()
+                .orderBy(F.desc("count"), F.asc(col))
+                .first()[0])
+
+    def calculate_range(self, column):
+        row = self.dataset.data.select(F.max(self._column(column)), F.min(column)).first()
+        return row[0] - row[1]

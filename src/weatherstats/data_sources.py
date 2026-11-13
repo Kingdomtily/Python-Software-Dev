@@ -37,22 +37,20 @@ class CsvFileSource(DataSource):
         return pd.concat(self.read_chunks(), ignore_index=True)
 
 class CombinedCsvSource(DataSource):
-    """Fetches several csv files and combines them into one DataFrame."""
-    def __init__(self, filenames):
-        self.sources = [CsvFileSource(name) for name in filenames]
-
-    def __iter__(self):
-        """Lets you loop over the source, yielding one DataFrame per file."""
-        for source in self.sources:
-            yield source.fetch()
+    """Reads several csv files with Spark and combines them into one Spark DataFrame."""
+    def __init__(self, spark, filenames):
+        self.spark = spark
+        self.filenames = filenames
 
     def fetch(self):
-        data = pd.concat(self, ignore_index=True)
-        logger.info("Combined %d files into %d rows", len(self.sources), len(data))
-        return data
-
-    async def async_fetch(self):
-        """"Designed to read both CSVs at the same time, as an async"""
-        frames = await asyncio.gather(*(asyncio.to_thread(source.fetch)for source in self.sources))
-        data = pd.concat(frames, ignore_index=True)
+        frames = []
+        for name in self.filenames:
+            if not Path(name).is_file():
+                logger.error("File not found: %s", name)
+                raise FileNotFoundError(f"Could not find {name}")
+            frames.append(self.spark.read.csv(name, header=True, inferSchema=True))
+        data = frames[0]
+        for frame in frames[1:]:
+            data = data.unionByName(frame, allowMissingColumns=True)
+        logger.info("Combined %d files into %d rows", len(self.filenames), data.count())
         return data

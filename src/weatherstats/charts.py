@@ -41,7 +41,7 @@ class WeatherCharts:
     def max_temp_histogram(self):
         """Histogram of how often each maximum temperature happens."""
         figure, axes = plt.subplots()
-        axes.hist(self.processor.dataset.data["MaxTemp"].dropna(), bins=40)
+        axes.hist(self.processor.dataset.data.select("MaxTemp").dropna().toPandas()["MaxTemp"], bins=40)
         axes.set_title("Daily Maximum Temperature")
         axes.set_xlabel("Max temperature (C)")
         axes.set_ylabel("Number of days")

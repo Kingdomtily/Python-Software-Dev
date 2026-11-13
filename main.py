@@ -15,18 +15,18 @@ def main():
     '''Changed this to utilize spark'''
     source = CombinedCsvSource(spark, ["WeatherData/Weather Training Data.csv", "WeatherData/Weather Test Data.csv"])
     try:
-        data = asyncio.run(source.async_fetch())
+        data = source.fetch()
         dataset = WeatherDataset(data)
         dataset.save("output.csv")
         print(dataset)
 
         processor = StatsProcessor(dataset)
-        for column, stats in processor.summarize_parallel_stats(["MinTemp", "MaxTemp", "Rainfall"]):
+        for column, stats in processor.summarize(["MinTemp", "MaxTemp", "Rainfall"]):
             print(column)
             for name, value in stats.items():
                 print(f"  {name}: {value}")
 
-        hot_days = processor.filter_rows(lambda row: row.MaxTemp >= 35)
+        hot_days = processor.filter_rows(lambda row: row.MaxTemp is not None and row.MaxTemp >= 35)
         rainy_days = processor.filter_rows(lambda row: row.RainToday == "Yes")
         print(f"Days at or above 35C: {len(hot_days)}")
         print(f"Rainy days: {len(rainy_days)}")
