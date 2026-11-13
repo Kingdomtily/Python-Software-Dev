@@ -5,12 +5,15 @@ from weatherstats.data_sources import CombinedCsvSource
 from weatherstats.dataset import WeatherDataset
 from weatherstats.processors import StatsProcessor
 from weatherstats.charts import WeatherCharts
+from pyspark.sql import SparkSession
 
 logger = logging.getLogger(__name__)
 
 def main():
-    '''Main function to include all of the program's instructions'''
-    source = CombinedCsvSource(["WeatherData/Weather Training Data.csv", "WeatherData/Weather Test Data.csv"])
+    '''Creation of the spark session.'''
+    spark = SparkSession.builder.appName("WeatherStats").master("local[*]").getOrCreate()
+    '''Changed this to utilize spark'''
+    source = CombinedCsvSource(spark, ["WeatherData/Weather Training Data.csv", "WeatherData/Weather Test Data.csv"])
     try:
         data = asyncio.run(source.async_fetch())
         dataset = WeatherDataset(data)
@@ -35,6 +38,8 @@ def main():
             print(f"Saved {make_chart()}")
     except (OSError, KeyError, ValueError) as error:
         logger.error("Program stopped: %s", error)
+    finally:
+        spark.stop()
 
     
 
