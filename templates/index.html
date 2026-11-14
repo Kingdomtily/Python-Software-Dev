@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Look up weather stats</h1>
+<p>Pick a location and a measurement to see its mean, median, mode, and range.</p>
+<form action="{{ url_for('results') }}" method="post">
+    <label for="location">Location</label>
+    <select id="location" name="location">
+        {% for loc in locations %}
+        <option value="{{ loc }}">{{ loc }}</option>
+        {% endfor %}
+    </select>
+
+    <label for="column">Measurement</label>
+    <select id="column" name="column">
+        <option value="MinTemp">Min Temp (C)</option>
+        <option value="MaxTemp">Max Temp (C)</option>
+        <option value="Rainfall">Rainfall (mm)</option>
+        <option value="Humidity3pm">3pm Humidity (%)</option>
+    </select>
+
+    <button type="submit">Get Stats</button>
+</form>
+{% endblock %}

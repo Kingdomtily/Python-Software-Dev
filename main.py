@@ -12,7 +12,6 @@ logger = logging.getLogger(__name__)
 def main():
     '''Creation of the spark session.'''
     spark = SparkSession.builder.appName("WeatherStats").master("local[*]").getOrCreate()
-    '''Changed this to utilize spark'''
     source = CombinedCsvSource(spark, ["WeatherData/Weather Training Data.csv", "WeatherData/Weather Test Data.csv"])
     try:
         data = source.fetch()

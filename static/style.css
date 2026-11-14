@@ -1,0 +1,63 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f4f6f8;
+    color: #222;
+}
+
+nav {
+    background: #2c5d8f;
+    padding: 12px 20px;
+}
+
+nav a, nav .brand {
+    color: white;
+    margin-right: 18px;
+    text-decoration: none;
+}
+
+nav .brand {
+    font-weight: bold;
+}
+
+main {
+    max-width: 900px;
+    margin: 20px auto;
+    padding: 0 16px;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    max-width: 300px;
+}
+
+select, button {
+    padding: 6px;
+    font-size: 1rem;
+}
+
+button {
+    background: #2c5d8f;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+table {
+    border-collapse: collapse;
+    background: white;
+}
+
+th, td {
+    border: 1px solid #ccc;
+    padding: 6px 12px;
+    text-align: left;
+}
+
+img {
+    display: block;
+    max-width: 100%;
+    margin-bottom: 20px;
+}

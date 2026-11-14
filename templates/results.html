@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>{{ search.column }} in {{ search.location }}</h1>
+<table>
+    <tr><th>Mean</th><td>{{ "%.2f"|format(search.mean) }}</td></tr>
+    <tr><th>Median</th><td>{{ "%.2f"|format(search.median) }}</td></tr>
+    <tr><th>Mode</th><td>{{ "%.2f"|format(search.mode) }}</td></tr>
+    <tr><th>Range</th><td>{{ "%.2f"|format(search.value_range) }}</td></tr>
+</table>
+<p>This search was saved to the database. <a href="{{ url_for('history') }}">See all past searches</a>.</p>
+<p><a href="{{ url_for('index') }}">Search again</a></p>
+{% endblock %}

@@ -13,6 +13,8 @@ dependencies = [
   "pandas>=2.0",
   "matplotlib>=3.7",
   "pyspark",
+  "flask",
+  "flask-sqlalchemy",
 ]
 authors = [
   { name = "TYLER FRANCOM" },

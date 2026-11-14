@@ -30,33 +30,7 @@ https://test.pypi.org/project/weatherstats-kingdomtily/
 pip install -i https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple/ weatherstats-kingdomtily
 
 ## Usage
-python main.py
-
-Example output:
-WeatherDataset with 142193 rows
-MinTemp
-  mean: 12.186399728729267
-  median: 12.0
-  mode: 9.6
-  range: 42.4
-MaxTemp
-  mean: 23.226784191272355
-  median: 22.6
-  mode: 20.0
-  range: 52.9
-Rainfall
-  mean: 2.3499740743108384
-  median: 0.0
-  mode: 0.0
-  range: 371.0
-Days at or above 35C: 8174
-Rainy days: 31455
-Average 3pm humidity on rainy days: 66.2%
-Average 3pm humidity on dry days: 47.2%
-Saved charts\rainfall_by_location.png
-Saved charts\max_temp_histogram.png
-Saved charts\humidity_rain_vs_dry.png
-The program also writes the combined data to `output.csv`, saves the charts to the `charts` folder, and writes log messages to the console and `weatherstats.log`.
+This project is now a webapp, and has a different way of running it. First java needs to be installed, then you run pip install -e . then you run python app.py. This will then direct you to open http://127.0.0.1:5000. startup will take about 30 ish seconds.
 
 ### Module 5: Automated testing
 - Wrote unit tests with pytest plus a doctest in `WeatherDataset`.
@@ -112,6 +86,14 @@ Some of the methods used Spark did not have. Like I mentioned above, len didn't 
 #### Results:
 After a few issues to get ironed out, the output is the same as before.
 
+### Module 9: Webapp
+
+#### How to run:
+I have updated the instructions above to describe how to run this project. It does take a second to start up, I believe it takes Spark a moment to startup before running.
+
+#### 3-tier description:
+The three tiers are the UI, which is in the templates/ and static/style.css files. Business logic, whis is in app.py and src/weatherstats/ and database, models.py uses sqlite through flask-sqlalchemy. It stores each search's location, column, stats, and time to recall for the history 
+
 ## Testing
 
 Run the tests:
@@ -126,31 +108,23 @@ pytest --cov=weatherstats --cov=main --cov-report=term-missing
 | 3 | `test_csv_source_reads_in_chunks` | `read_chunks()` yields the right chunk sizes |
 | 4 | `test_csv_source_missing_file` | A missing file raises `FileNotFoundError` and logs it |
 | 5 | `test_csv_source_empty_file` | An empty CSV raises `EmptyDataError` and logs it |
-| 6 | `test_combined_source_iterates_one_frame_per_file` | Looping yields one DataFrame per file |
-| 7 | `test_combined_source_fetch_combines_files` | Files are combined and rows renumbered |
+| 6 | `test_combined_source_fetch_combines_files` | Spark combines both files into one DataFrame with all rows |
+| 7 | `test_combined_source_missing_file` | The Spark source raises `FileNotFoundError` for a missing file and logs it |
 | 8 | `test_dataset_from_source` | `from_source()`, `len()`, and `str()` work |
 | 9 | `test_dataset_data_is_read_only` | `data` can't be replaced |
-| 10 | `test_dataset_save_writes_csv` | `save()` writes matching data |
+| 10 | `test_dataset_save_writes_csv` | `save()` writes a CSV with every row and column |
 | 11 | `test_dataset_save_bad_path` | Saving to a missing folder raises `OSError` and logs it |
 | 12 | `test_mean_skips_missing_values` | Mean ignores empty values |
 | 13 | `test_median` | Median is correct |
 | 14 | `test_mode_returns_lowest_on_tie` | Ties return the lowest value |
 | 15 | `test_range` | Range is max minus min |
 | 16 | `test_missing_column` | An unknown column raises `KeyError` and logs it |
-| 17 | `test_summarize_yields_one_column_at_a_time` | `summarize()` yields one column per step |
-| 18 | `test_filter_rows_with_lambda` | `filter_rows()` keeps only rows matching a lambda (hot days) |
-| 19 | `test_average_skips_missing_values` | `average()` ignores empty values |
-| 20 | `test_average_of_nothing_raises` | `average()` raises `ValueError` when there's nothing to average |
-| 21 | `test_average_where` | Humidity averages for rainy and dry days are correct |
-| 22 | `test_average_by_location` | Averages per location are correct |
-| 23 | `test_charts_are_saved` | All three charts are saved as PNG files |
-| 24 | `test_chart_bad_folder` | A chart that can't be saved raises `OSError` and logs it |
-| 25 | `test_main_prints_stats` | `main()` prints the stats and patterns, writes `output.csv`, and saves 3 charts |
-| 26 | `test_main_logs_error_when_files_missing` | `main()` logs "Program stopped" instead of crashing |
-| 27 | Doctest in `WeatherDataset` | `print(dataset)` shows the row count |
-| 28 | `test_combined_source_async_fetch_matches_fetch` | Double checks that the async outputs the same value as the sync
-| 29 | `test_summarize_parallel_matches_summarize` | Double checks that the output of this new function matches the old one
-Result: 29 passed (In module 7, not updated for module 8)
+| 17 | `test_average_skips_missing_values` | `average()` ignores empty values |
+| 18 | `test_average_of_nothing_raises` | `average()` raises `ValueError` when there's nothing to average |
+| 19 | `test_average_by_location` | Averages per location are correct |
+| 20 | `test_chart_bad_folder` | A chart that can't be saved raises `OSError` and logs it |
+| 21 | `test_main_logs_error_when_files_missing` | `main()` logs "Program stopped" instead of crashing |
+Result: 21 passed (the tests take a few minutes because Spark starts locally)
 
 ## Documentation
 API documentation is generated from the docstrings with pydoc:

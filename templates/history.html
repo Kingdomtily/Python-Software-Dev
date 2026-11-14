@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Search History</h1>
+{% if searches %}
+<table>
+    <tr>
+        <th>Time</th><th>Location</th><th>Measurement</th>
+        <th>Mean</th><th>Median</th><th>Mode</th><th>Range</th>
+    </tr>
+    {% for s in searches %}
+    <tr>
+        <td>{{ s.created.strftime("%Y-%m-%d %H:%M") }}</td>
+        <td>{{ s.location }}</td>
+        <td>{{ s.column }}</td>
+        <td>{{ "%.2f"|format(s.mean) }}</td>
+        <td>{{ "%.2f"|format(s.median) }}</td>
+        <td>{{ "%.2f"|format(s.mode) }}</td>
+        <td>{{ "%.2f"|format(s.value_range) }}</td>
+    </tr>
+    {% endfor %}
+</table>
+{% else %}
+<p>No searches yet. <a href="{{ url_for('index') }}">Make one</a>.</p>
+{% endif %}
+{% endblock %}

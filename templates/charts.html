@@ -1,0 +1,7 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Charts</h1>
+{% for name in charts %}
+<img src="{{ url_for('static', filename='charts/' + name) }}" alt="{{ name }}">
+{% endfor %}
+{% endblock %}

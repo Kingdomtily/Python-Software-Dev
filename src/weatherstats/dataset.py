@@ -1,6 +1,7 @@
 """Class for storing the weather data."""
 import logging
 
+
 logger = logging.getLogger(__name__)
 
 class WeatherDataset:
